@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Suspense } from 'react';
 
-import Home from '../views/Home';
 import Detail from '../views/Detail';
 import Error404 from '../views/Error404';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -9,6 +8,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import Profile from '../views/Profile';
 import LikedEvents from '../views/Profile/components/LikedEvents';
 import MyInfo from '../views/Profile/components/MyInfo';
+import { Home } from '../views/Home';
 
 const router = createBrowserRouter([
 	{
@@ -20,8 +20,7 @@ const router = createBrowserRouter([
 		path: '/detail/:eventId',
 		element: (
 			<Suspense fallback={<div>Cargando...</div>}>
-				<ErrorBoundary
-					fallback={<div>Ha ocurrido un error al obtener el detalle</div>}>
+				<ErrorBoundary>
 					<Detail />
 				</ErrorBoundary>
 			</Suspense>

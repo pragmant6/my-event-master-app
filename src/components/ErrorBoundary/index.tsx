@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-class ErrorBoundary extends Component {
+class ErrorBoundary extends Component<{ children: React.ReactNode }> {
 	constructor(props) {
 		super(props);
 		this.state = { hasError: false };

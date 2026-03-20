@@ -1,8 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import styles from './MyInfo.module.css';
 import { useEffect } from 'react';
+import { myInfoStyles } from '../../../../utils/constStyles';
 
 const USER_DATA = 'userData';
 
@@ -33,7 +33,7 @@ const MyInfo = () => {
 
 	return (
 		<form onSubmit={handleSubmit(handleFormSubmit)} className={styles.form}>
-			<label className={styles.label}>
+			<label className={myInfoStyles.label}>
 				Name
 				<input
 					{...register('name', {
@@ -41,17 +41,17 @@ const MyInfo = () => {
 						minLength: 1,
 						maxLength: 120,
 					})}
-					className={styles.input}
+					className={myInfoStyles.input}
 				/>
 			</label>
-			<label className={styles.label}>
+			<label className={myInfoStyles.label}>
 				Email
 				<input
 					{...register('email', { required: true, min: 1, max: 200 })}
-					className={styles.input}
+					className={myInfoStyles.input}
 				/>
 			</label>
-			<label className={styles.label}>
+			<label className={myInfoStyles.label}>
 				Age
 				<input
 					{...register('age', {
@@ -60,11 +60,11 @@ const MyInfo = () => {
 						max: 120,
 						valueAsNumber: true,
 					})}
-					className={styles.input}
+					className={myInfoStyles.input}
 					type='number'
 				/>
 			</label>
-			<button type='submit' className={styles.submitButton}>
+			<button type='submit' className={myInfoStyles.submitButton}>
 				Save
 			</button>
 		</form>

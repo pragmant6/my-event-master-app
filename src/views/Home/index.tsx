@@ -2,37 +2,43 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import ReactPaginate from 'react-paginate';
 
 import Navbar from '../../components/Navbar';
-import Events from '../../components/Events';
+import Events from '../../components/Events'; // 👈 IMPORTANTE
 import useEventsResults from '../../state/events-results';
-import styles from './Home.module.css';
+import { paginationStyles } from '../../utils/constStyles';
 
-const Home = () => {
+type PageClickEvent = {
+	selected: number;
+};
+
+export const Home: React.FC = () => {
 	const { data, isLoading, error, fetchEvents } = useEventsResults();
+
 	const events = useMemo(
 		() => data?._embedded?.events || [],
 		[data?._embedded?.events]
 	);
-	const page = useMemo(() => data?.page || {}, [data?.page]);
-	const [isToggle, setIsToggle] = useState(false);
 
-	const [searchTerm, setSearchTerm] = useState('');
-	const containerRef = useRef(null);
-	const fetchMyEventsRef = useRef(null);
+	const page = useMemo(() => data?.page || {}, [data?.page]);
+
+	const [isToggle, setIsToggle] = useState<boolean>(false);
+	const [searchTerm, setSearchTerm] = useState<string>('');
+
+	const containerRef = useRef<HTMLDivElement | null>(null);
+	const fetchMyEventsRef = useRef<typeof fetchEvents | null>(null);
 
 	fetchMyEventsRef.current = fetchEvents;
 
 	useEffect(() => {
-		console.log('useEffect');
-		fetchMyEventsRef.current();
+		fetchMyEventsRef.current?.();
 	}, []);
 
-	function handleNavbarSearch(term: any) {
+	const handleNavbarSearch = (term: string) => {
 		setSearchTerm(term);
 		fetchEvents(`&keyword=${term}`);
-	}
+	};
 
 	const handlePageClick = useCallback(
-		({ selected }: { selected: number }) => {
+		({ selected }: PageClickEvent) => {
 			fetchEvents(`&keyword=${searchTerm}&page=${selected}`);
 		},
 		[searchTerm, fetchEvents]
@@ -52,19 +58,21 @@ const Home = () => {
 				<button onClick={() => setIsToggle(!isToggle)}>
 					{isToggle ? 'ON' : 'OFF'}
 				</button>
+
 				<Events searchTerm={searchTerm} events={events} />
+
 				<ReactPaginate
-					className={styles.pagination}
-					nextClassName={styles.next}
-					previousClassName={styles.previous}
-					pageClassName={styles.page}
-					activeClassName={styles.activePage}
-					disabledClassName={styles.disabledPage}
+					className={paginationStyles.pagination}
+					nextClassName={paginationStyles.next}
+					previousClassName={paginationStyles.previous}
+					pageClassName={paginationStyles.page}
+					activeClassName={paginationStyles.activePage}
+					disabledClassName={paginationStyles.disabledPage}
 					breakLabel='...'
 					nextLabel='>'
 					onPageChange={handlePageClick}
 					pageRangeDisplayed={5}
-					pageCount={page.totalPages}
+					pageCount={page?.totalPages || 0}
 					previousLabel='<'
 					renderOnZeroPageCount={null}
 				/>
@@ -79,5 +87,3 @@ const Home = () => {
 		</>
 	);
 };
-
-export default Home;
